@@ -1,9 +1,9 @@
 class Animal < ApplicationRecord
-    validates :name, presence:true
-    validates :age, presence:true, length: {minimum:1}
+    validates :name, presence:true, length: {minimum:3}
+    validates :age, presence:true
     validates :sound, presence:true
 
-    def info
+    def info    
        "#{name}: #{age}years" 
     end
 end

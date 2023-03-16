@@ -1,4 +1,6 @@
 class AnimalsController < ApplicationController
+    wrap_parameters format: []
+rescue_from ActiveRecord::RecordInvalid, with: :invalid_attribute
     def index
         render json: Animal.all,  except: [:created_at, :updated_at], methods: [:info]
     end
@@ -8,13 +10,13 @@ class AnimalsController < ApplicationController
     end
 
     def create
-        animal= Animal.create(animal_params)
+        animal= Animal.create!(animal_params)
         render json: animal
-    end
+      end
 
     def update
         animal=Animal.find_by(id: params[:id])
-        animal.update(animal_params)
+        animal.update!(animal_params)
         render json: animal,  except: [:created_at, :updated_at], methods: :info
 
     end
@@ -25,6 +27,9 @@ class AnimalsController < ApplicationController
     end
 
     private
+    def invalid_attribute(invalid)
+        render json: {errors: invalid.record.errors}, status: :unprocessable_entity
+    end
 
     def animal_params
         params.permit(:name, :sound, :age)
